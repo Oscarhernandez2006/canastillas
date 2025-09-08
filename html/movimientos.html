@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimientos - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/movimientos.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span class="logo-text">Control de Canastillas</span>
+            </div>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-home"></i> Dashboard</a></li>
+                    <li><a href="movimientos.html" class="nav-link active"><i class="fa-solid fa-truck-ramp-box"></i> Movimientos</a></li>
+                    <li><a href="usuarios.html" class="nav-link"><i class="fa-solid fa-users"></i> Usuarios</a></li>
+                    <li><a href="inventario.html" class="nav-link"><i class="fa-solid fa-boxes"></i> Inventario</a></li>
+                    <li><a href="#" class="nav-link"><i class="fa-solid fa-gears"></i> Configuración</a></li>
+                    <li><a href="#" class="nav-link"><i class="fa-solid fa-circle-info"></i> Ayuda</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <h2 class="dashboard-title">Movimientos de Canastillas</h2>
+                    <p class="welcome-message">Registro y seguimiento de todos los movimientos</p>
+                </div>
+                <div class="user-profile">
+                    <span>Administrador</span>
+                    <div class="user-avatar">A</div>
+                </div>
+            </header>
+
+            <section class="filters-section">
+                <div class="filter-group">
+                    <label for="filter-type">Filtrar por Tipo:</label>
+                    <select id="filter-type">
+                        <option value="all">Todos</option>
+                        <option value="entrada">Entrada</option>
+                        <option value="salida">Salida</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-date">Filtrar por Fecha:</label>
+                    <select id="filter-date">
+                        <option value="all">Todas las fechas</option>
+                        <option value="today">Hoy</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month">Este mes</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="search">Buscar:</label>
+                    <input type="text" id="search" placeholder="ID de canastilla...">
+                </div>
+                <!-- Botón de actualizar añadido aquí -->
+                <div class="filter-group update-button-container">
+                    <button class="btn-update" id="btn-update">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                </div>
+            </section>
+
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-movimientos">0</h3>
+                        <p>Total Movimientos</p>
+                    </div>
+                </div>
+                <div class="stat-card entrada">
+                    <div class="stat-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="entradas-count">0</h3>
+                        <p>Entradas</p>
+                    </div>
+                </div>
+                <div class="stat-card salida">
+                    <div class="stat-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="salidas-count">0</h3>
+                        <p>Salidas</p>
+                    </div>
+                </div>
+                <div class="stat-card recent">
+                    <div class="stat-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="hoy-count">0</h3>
+                        <p>Hoy</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-section">
+                <div class="section-header">
+                    <h3 class="section-title">Historial de Movimientos</h3>
+                    <button class="btn-primary" id="btn-add-movimiento">
+                        <i class="fas fa-plus"></i> Nuevo Movimiento
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Canastilla</th>
+                                <th>Tipo</th>
+                                <th>Origen</th>
+                                <th>Destino</th>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="movimientos-body">
+                            <!-- Los datos se cargarán dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para agregar movimiento -->
+    <div id="movimientoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title" class="modal-title">Registrar Nuevo Movimiento</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="movimiento-form">
+                    <div class="form-group">
+                        <label for="id-canastilla">ID de Canastilla</label>
+                        <select id="id-canastilla" name="id_canastilla" required>
+                            <option value="">Seleccione una canastilla</option>
+                            <!-- Las opciones se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo-movimiento">Tipo de Movimiento</label>
+                        <select id="tipo-movimiento" name="tipo_movimiento" required>
+                            <option value="">Seleccione el tipo</option>
+                            <option value="entrada">Entrada</option>
+                            <option value="salida">Salida</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion-origen">Ubicación Origen</label>
+                        <select id="ubicacion-origen" name="ubicacion_origen" required>
+                            <option value="">Seleccione origen</option>
+                            <option value="Almacén A">Almacén A</option>
+                            <option value="Almacén B">Almacén B</option>
+                            <option value="Almacén C">Almacén C</option>
+                            <option value="Cliente X">Cliente X</option>
+                            <option value="Cliente Y">Cliente Y</option>
+                            <option value="Cliente Z">Cliente Z</option>
+                            <option value="Taller">Taller</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion-destino">Ubicación Destino</label>
+                        <select id="ubicacion-destino" name="ubicacion_destino" required>
+                            <option value="">Seleccione destino</option>
+                            <option value="Almacén A">Almacén A</option>
+                            <option value="Almacén B">Almacén B</option>
+                            <option value="Almacén C">Almacén C</option>
+                            <option value="Cliente X">Cliente X</option>
+                            <option value="Cliente Y">Cliente Y</option>
+                            <option value="Cliente Z">Cliente Z</option>
+                            <option value="Taller">Taller</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuario-responsable">Usuario Responsable</label>
+                        <select id="usuario-responsable" name="id_usuario_responsable" required>
+                            <option value="">Seleccione usuario</option>
+                            <option value="1">Juan Pérez (Admin)</option>
+                            <option value="2">María García (Operador)</option>
+                            <option value="3">Carlos López (Operador)</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancel-button">Cancelar</button>
+                <button type="submit" form="movimiento-form" class="btn-submit" id="save-button">Registrar Movimiento</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/movimientos.js"></script>
+</body>
+</html>

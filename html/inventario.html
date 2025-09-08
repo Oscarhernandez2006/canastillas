@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/inventario.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span class="logo-text">Control de Canastillas</span>
+            </div>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-home"></i> Dashboard</a></li>
+                    <li><a href="movimientos.html" class="nav-link"><i class="fa-solid fa-truck-ramp-box"></i> Movimientos</a></li>
+                    <li><a href="usuarios.html" class="nav-link"><i class="fa-solid fa-users"></i> Usuarios</a></li>
+                    <li><a href="inventario.html" class="nav-link active"><i class="fa-solid fa-boxes"></i> Inventario</a></li>
+                    <li><a href="#" class="nav-link"><i class="fa-solid fa-gears"></i> Configuración</a></li>
+                    <li><a href="#" class="nav-link"><i class="fa-solid fa-circle-info"></i> Ayuda</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <h2 class="dashboard-title">Inventario de Canastillas</h2>
+                    <p class="welcome-message">Gestiona y visualiza el estado de todas las canastillas</p>
+                </div>
+                <div class="user-profile">
+                    <span>Administrador</span>
+                    <div class="user-avatar">A</div>
+                </div>
+            </header>
+
+            <section class="filters-section">
+                <div class="filter-group">
+                    <label for="filter-status">Filtrar por Estado:</label>
+                    <select id="filter-status">
+                        <option value="all">Todos</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="En Tránsito">En Tránsito</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-location">Filtrar por Ubicación:</label>
+                    <select id="filter-location">
+                        <option value="all">Todas</option>
+                        <option value="Almacén A">Almacén A</option>
+                        <option value="Almacén B">Almacén B</option>
+                        <option value="Almacén C">Almacén C</option>
+                        <option value="En Ruta">En Ruta</option>
+                        <option value="Taller">Taller</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="search">Buscar:</label>
+                    <input type="text" id="search" placeholder="ID de canastilla...">
+                </div>
+            </section>
+
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-canastillas">0</h3>
+                        <p>Total Canastillas</p>
+                    </div>
+                </div>
+                <div class="stat-card available">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="disponibles-count">0</h3>
+                        <p>Disponibles</p>
+                    </div>
+                </div>
+                <div class="stat-card in-transit">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck-moving"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="transito-count">0</h3>
+                        <p>En Tránsito</p>
+                    </div>
+                </div>
+                <div class="stat-card maintenance">
+                    <div class="stat-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="mantenimiento-count">0</h3>
+                        <p>Mantenimiento</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-section">
+                <div class="section-header">
+                    <h3 class="section-title">Lista de Canastillas</h3>
+                    <button class="btn-primary" id="btn-add-canastilla">
+                        <i class="fas fa-plus"></i> Nueva Canastilla
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Estado</th>
+                                <th>Ubicación</th>
+                                <th>Último Movimiento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventario-body">
+                            <!-- Los datos se cargarán dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para agregar canastilla -->
+    <div id="canastillaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Registrar Nueva Canastilla</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="canastilla-form">
+                    <div class="form-group">
+                        <label for="id-canastilla">ID de Canastilla</label>
+                        <input type="text" id="id-canastilla" name="id_canastilla" placeholder="Ej: C-001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado-canastilla">Estado</label>
+                        <select id="estado-canastilla" name="estado" required>
+                            <option value="Disponible">Disponible</option>
+                            <option value="En Tránsito">En Tránsito</option>
+                            <option value="Mantenimiento">Mantenimiento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion-canastilla">Ubicación</label>
+                        <select id="ubicacion-canastilla" name="ubicacion" required>
+                            <option value="Almacén A">Almacén A</option>
+                            <option value="Almacén B">Almacén B</option>
+                            <option value="Almacén C">Almacén C</option>
+                            <option value="En Ruta">En Ruta</option>
+                            <option value="Taller">Taller</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancel-button">Cancelar</button>
+                <button type="submit" form="canastilla-form" class="btn-submit">Registrar Canastilla</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/inventario.js"></script>
+</body>
+</html>
